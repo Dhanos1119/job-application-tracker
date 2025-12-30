@@ -8,6 +8,6 @@ public class HelloController {
 
     @GetMapping("/api/hello")
     public String hello() {
-        return "Backend  running 🚀";
+        return "Backend is  running 🚀";
     }
 }
