@@ -3,8 +3,6 @@ package com.ats.backend.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
-
 @Document(collection = "jobs")
 public class Job {
 
@@ -13,11 +11,15 @@ public class Job {
 
     private String companyName;
     private String role;
-    private JobStatus status;
-    private LocalDate appliedDate;
 
+    private JobStatus status;   // ✅ ENUM type
+
+    private String appliedDate;
+
+    // -------- Constructors --------
     public Job() {}
 
+    // -------- Getters & Setters --------
     public String getId() {
         return id;
     }
@@ -50,11 +52,11 @@ public class Job {
         this.status = status;
     }
 
-    public LocalDate getAppliedDate() {
+    public String getAppliedDate() {
         return appliedDate;
     }
 
-    public void setAppliedDate(LocalDate appliedDate) {
+    public void setAppliedDate(String appliedDate) {
         this.appliedDate = appliedDate;
     }
 }
