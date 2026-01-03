@@ -45,7 +45,7 @@ function App() {
       {/* ADD JOB FORM */}
       <form onSubmit={addJob}>
         <input
-          placeholder="Company "
+          placeholder="Company Name"
           value={companyName}
           onChange={e => setCompanyName(e.target.value)}
           required
