@@ -18,7 +18,7 @@ import com.ats.backend.repository.JobRepository;
 
 @RestController
 @RequestMapping("/api/jobs")
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class JobController {
 
     private final JobRepository jobRepository;
@@ -39,28 +39,43 @@ public class JobController {
         return jobRepository.findAll();
     }
 
-    // ---------------- UPDATE STATUS ----------------
-@PutMapping("/{id}/status")
-public Job updateJobStatus(
-        @PathVariable String id,
-        @RequestBody UpdateStatusRequest request
-) {
-    Job job = jobRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Job not found"));
+    // ---------------- UPDATE FULL JOB (EDIT) ----------------
+    @PutMapping("/{id}")
+    public Job updateJob(
+            @PathVariable String id,
+            @RequestBody Job updatedJob
+    ) {
+        Job job = jobRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
 
-    try {
-        JobStatus status = JobStatus.valueOf(
-                request.getStatus().trim().toUpperCase()
-        );
-        job.setStatus(status);
-    } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Invalid job status: " + request.getStatus());
+        job.setCompanyName(updatedJob.getCompanyName());
+        job.setRole(updatedJob.getRole());
+        job.setStatus(updatedJob.getStatus());
+        job.setAppliedDate(updatedJob.getAppliedDate());
+
+        return jobRepository.save(job);
     }
 
-    return jobRepository.save(job);
-}
+    // ---------------- UPDATE ONLY STATUS ----------------
+    @PutMapping("/{id}/status")
+    public Job updateJobStatus(
+            @PathVariable String id,
+            @RequestBody UpdateStatusRequest request
+    ) {
+        Job job = jobRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Job not found"));
 
+        try {
+            JobStatus status = JobStatus.valueOf(
+                    request.getStatus().trim().toUpperCase()
+            );
+            job.setStatus(status);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid job status: " + request.getStatus());
+        }
 
+        return jobRepository.save(job);
+    }
 
     // ---------------- DELETE ----------------
     @DeleteMapping("/{id}")
