@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [jobs, setJobs] = useState([]);
@@ -19,6 +20,11 @@ function App() {
 
   // ---------------- ADD / UPDATE JOB ----------------
   const handleSubmit = async () => {
+    if (!companyName || !role) {
+      alert("Company name and role are required");
+      return;
+    }
+
     const jobData = {
       companyName,
       role,
@@ -27,7 +33,6 @@ function App() {
     };
 
     if (editingId) {
-      // UPDATE JOB
       await fetch(`http://localhost:8080/api/jobs/${editingId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -35,7 +40,6 @@ function App() {
       });
       setEditingId(null);
     } else {
-      // ADD JOB
       await fetch("http://localhost:8080/api/jobs", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,9 +54,12 @@ function App() {
 
   // ---------------- DELETE JOB ----------------
   const deleteJob = async (id) => {
+    if (!window.confirm("Delete this job?")) return;
+
     await fetch(`http://localhost:8080/api/jobs/${id}`, {
       method: "DELETE",
     });
+
     fetchJobs();
   };
 
@@ -60,12 +67,8 @@ function App() {
   const updateStatus = async (id, newStatus) => {
     await fetch(`http://localhost:8080/api/jobs/${id}/status`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        status: newStatus,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ status: newStatus }),
     });
 
     fetchJobs();
@@ -79,34 +82,41 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="app-container">
       <h1>Job Application Tracker</h1>
 
       {/* FORM */}
-      <input
-        placeholder="Company Name"
-        value={companyName}
-        onChange={(e) => setCompanyName(e.target.value)}
-      />
-      <input
-        placeholder="Role"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      />
-      <button onClick={handleSubmit}>
-        {editingId ? "Update Job" : "Add Job"}
-      </button>
-
-      <hr />
+      <div className="form">
+        <input
+          placeholder="Company Name"
+          value={companyName}
+          onChange={(e) => setCompanyName(e.target.value)}
+        />
+        <input
+          placeholder="Role"
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+        />
+        <button onClick={handleSubmit}>
+          {editingId ? "Update Job" : "Add Job"}
+        </button>
+      </div>
 
       {/* JOB LIST */}
-      <ul>
+      <ul className="job-list">
         {jobs.map((job) => (
-          <li key={job.id} style={{ marginBottom: "15px" }}>
-            <b>{job.companyName}</b> – {job.role}
-            <br />
+          <li key={job.id} className="job-card">
+            <div className="job-title">
+              {job.companyName} – {job.role}
+            </div>
 
             Status:{" "}
+            <span className={`status ${job.status}`}>
+              {job.status}
+            </span>
+
+            <br />
+
             <select
               value={job.status}
               onChange={(e) => updateStatus(job.id, e.target.value)}
@@ -117,10 +127,14 @@ function App() {
               <option value="REJECTED">REJECTED</option>
             </select>
 
-            <br />
-
-            <button onClick={() => editJob(job)}>Edit</button>
-            <button onClick={() => deleteJob(job.id)}>Delete</button>
+            <div className="actions">
+              <button className="edit" onClick={() => editJob(job)}>
+                Edit
+              </button>
+              <button className="delete" onClick={() => deleteJob(job.id)}>
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
