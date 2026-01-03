@@ -68,3 +68,24 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Job Application Tracker
+
+A full stack Job Application Tracker built using React, Spring Boot, and MongoDB.
+
+## Features
+- Add, Edit, Delete job applications
+- Status tracking (APPLIED, INTERVIEW, OFFER, REJECTED)
+- Real-time UI updates
+- RESTful APIs
+- MongoDB persistence
+
+## Tech Stack
+Frontend: React  
+Backend: Spring Boot  
+Database: MongoDB  
+
+## How to Run
+1. Start MongoDB
+2. Run Spring Boot backend
+3. Run React frontend using `npm start`
